@@ -1,0 +1,22 @@
+version: "3.3"
+
+services:
+  server:
+    build: ./server
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - ./server:/app/server
+    ports:
+      - "8000:8000"
+  web:
+    build: ./web
+    command: ["npm", "start"]
+    volumes:
+      - ./web:/app/web
+      - node-modules:/app/web/node_modules
+    ports:
+      - "3000:3000"
+    tty: true
+
+volumes:
+  node-modules:
