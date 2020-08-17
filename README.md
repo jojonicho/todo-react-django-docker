@@ -1,10 +1,12 @@
 # Todo App with React and Django
 
-[index](./todo.gif)
+![index](./todo.gif)
 
-## Dependencies
+## This Project Uses
 
 - [`create-react-app`](https://npm.im/create-react-app)
+- Typescript
+- [`SWR`](https://github.com/vercel/swr)
 - `Django`
 - `Docker` and `docker-compose`
 
