@@ -2,10 +2,12 @@ import styled from "@emotion/styled";
 
 type Cont = {
   closed?: boolean;
+  absolute?: boolean;
 };
 
 export const Container = styled.div<Cont>`
-  backdrop-filter: blur(4px) contrast(0.9);
+  backdrop-filter: blur(40px) contrast(0.8);
+  // background: ${({ theme }) => theme.colors.white}
   font-family: ${({ theme }) => theme.fontFamily.heading};
   padding: 10px 2vw;
   margin: 0.25vw 0 0.75vw 0;
@@ -27,7 +29,7 @@ export const Container = styled.div<Cont>`
     }
   }
   border-radius: ${({ theme }) => theme.borderRadius.default};
-  box-shadow: ${({ theme }) => theme.shadow.mekari};
+  // box-shadow: ${({ theme }) => theme.shadow.mekari};
   text {
     margin-top: calc(0.3rem + 0.2vw);
   }
@@ -41,9 +43,6 @@ export const Container = styled.div<Cont>`
   white-space: pre-line;
   word-break: break-all;
   overflow-wrap: break-word;
-  div {
-    margin: 0 5px;
-  }
 `;
 
 export const RowContainer = styled.div`
@@ -53,6 +52,28 @@ export const RowContainer = styled.div`
   align-items: center;
   flex-wrap: wrap;
 `;
+export const ColumnContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+`;
+// export const RowContainer = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-items: center;
+//   button {
+//     margin-left: 10px;
+//   }
+//   flex-wrap: wrap;
+//   width: 30vw;
+//   @media (max-width: ${({ theme }) => theme.breakpoints.s}) {
+//     width: 85vw;
+//   }
+// `;
+
 export const Button = styled.button`
   transition: ${(props) => props.theme.transitions.boom.transition};
   background: ${(props) =>
@@ -105,6 +126,9 @@ export const SubTitle = styled.h2`
   color: ${({ theme }) => theme.colors.background.dlight};
   font-size: calc(0.3vw + 0.7rem);
   word-break: break-word;
+  s {
+    color: ${({ theme }) => theme.colors.background.light};
+  }
 `;
 
 export const SubSubTitle = styled.h3`

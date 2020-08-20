@@ -6,11 +6,10 @@ import styled from "@emotion/styled";
 import { TodoType as Todo } from "../utils/types";
 import { TodoList } from "../components/TodoList";
 import { useForm } from "react-hook-form";
+import { AUTH_TOKEN_STORAGE_KEY, API_URL } from "../constants";
 
 export const HomeContainer = styled.div`
   font-family: ${({ theme }) => theme.fontFamily.heading};
-  padding: 10px 2vw;
-  margin: 0.25vw 0 0.75vw 0;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -27,9 +26,6 @@ export const HomeContainer = styled.div`
   }
   border-radius: ${({ theme }) => theme.borderRadius.default};
   // box-shadow: ${({ theme }) => theme.shadow.mekari};
-  text {
-    margin-top: calc(0.3rem + 0.2vw);
-  }
   .submit {
     cursor: pointer;
     &:hover {
@@ -40,9 +36,6 @@ export const HomeContainer = styled.div`
   white-space: pre-line;
   word-break: break-all;
   overflow-wrap: break-word;
-  div {
-    margin: 0 5px;
-  }
 `;
 
 const Form = styled.form`
@@ -53,7 +46,19 @@ const Form = styled.form`
   margin-bottom: 20px;
 `;
 export const Home: React.FC = () => {
-  const URL = "http://localhost:8000";
+  // useEffect(() => {
+  //   console.log("yo");
+  // }, []);
+
+  const headers = new Headers({
+    "Content-Type": "application/json",
+  });
+  const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
+
+  if (token) {
+    headers.append("Authorization", `Token ${token}`);
+  }
+
   const { handleSubmit, register, reset, errors } = useForm({
     mode: "onSubmit",
     reValidateMode: "onChange",
@@ -61,35 +66,32 @@ export const Home: React.FC = () => {
     shouldUnregister: true,
   });
   const fetcher = async (endpoint: string) => {
-    const response = await fetch(`${URL}/${endpoint}/`);
+    const response = await fetch(`${API_URL}/${endpoint}/`, {
+      headers,
+    });
     const json = await response.json();
     return json;
   };
   const { data, mutate } = useSWR<[Todo]>("todos", fetcher);
   const addTodo = async (name: string) => {
-    await fetch(`${URL}/todos/`, {
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
+    console.log(name);
+    await fetch(`${API_URL}/todos/`, {
+      headers,
       method: "POST",
       body: JSON.stringify({ name }),
     });
     mutate({ ...data! });
   };
   const deleteTodo = async (id: number) => {
-    await fetch(`${URL}/todos/${id}/`, {
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
+    await fetch(`${API_URL}/todos/${id}/`, {
+      headers,
       method: "DELETE",
     });
     mutate({ ...data! });
   };
   const updateTodo = async (id: number, name: string, completed: boolean) => {
-    await fetch(`${URL}/todos/${id}/`, {
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
+    await fetch(`${API_URL}/todos/${id}/`, {
+      headers,
       method: "PATCH",
       body: JSON.stringify({ name, completed }),
     });
@@ -115,13 +117,11 @@ export const Home: React.FC = () => {
       {!data ? (
         <Loader />
       ) : data ? (
-        <>
-          <TodoList
-            todos={data!}
-            updateTodo={updateTodo}
-            deleteTodo={deleteTodo}
-          />
-        </>
+        <TodoList
+          todos={data!}
+          updateTodo={updateTodo}
+          deleteTodo={deleteTodo}
+        />
       ) : null}
     </HomeContainer>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { TodoType } from "../../utils/types";
-import { Todo } from "../Todo";
+import { Todo } from "./Todo";
 
 interface TodoListProps {
   todos?: [TodoType];

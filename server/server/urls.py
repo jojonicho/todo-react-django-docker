@@ -16,8 +16,27 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from rest_auth.registration.views import SocialLoginView
+
+
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
+
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+
+
+# from rest_framework_jwt.views import obtain_jwt_token
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("todos/", include("todo.urls")),
     path("api/", include("rest_framework.urls", namespace="rest_framework")),
+    path("rest-auth/register/", include("rest_auth.registration.urls")),
+    path("rest-auth/facebook/", FacebookLogin.as_view(), name="fb_login"),
+    path("rest-auth/google/", GoogleLogin.as_view(), name="google_login"),
+    path("accounts/", include("allauth.urls")),
 ]
